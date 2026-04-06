@@ -83,6 +83,40 @@ npx remotion render
 
 Renderパネルが開くので、そこから出力設定を行い、書き出しを開始できます。CLIから直接書き出すことも可能です。詳しくは [Remotionのドキュメント](https://www.remotion.dev/docs/render/) を参照してください。
 
+## YouTubeへの自動アップロード
+
+書き出した動画（`out/video.mp4`）を、指定したYouTubeアカウントへ限定公開で自動アップロードするスクリプトが用意されています。
+
+### 1. YouTube API の設定
+1. [Google Cloud Console](https://console.cloud.google.com/) でプロジェクトを作成します。
+2. **YouTube Data API v3** を有効化します。
+3. **OAuth 同意画面** を設定し（テストユーザーに自身のアカウントを追加）、**認証情報** から「OAuth 2.0 クライアント ID」を作成します（アプリケーションの種類は「ウェブ アプリケーション」、リダイレクトURIに `http://localhost` などを設定）。
+4. **クライアントID** と **クライアントシークレット** を取得します。
+5. OAuth 2.0 Playground などを使用して、YouTubeアカウントの **リフレッシュトークン** を取得します（スコープは `https://www.googleapis.com/auth/youtube.upload` が必要です）。
+
+### 2. 環境変数の設定
+プロジェクトルートにある `.env.example` をコピーして `.env` ファイルを作成し、取得した認証情報を記述します。
+
+```bash
+cp .env.example .env
+```
+
+```env
+# .env
+YOUTUBE_CLIENT_ID=取得したクライアントID
+YOUTUBE_CLIENT_SECRET=取得したクライアントシークレット
+YOUTUBE_REFRESH_TOKEN=取得したリフレッシュトークン
+```
+
+### 3. アップロードの実行
+動画の書き出し（デフォルトでは `out/video.mp4` に出力されます）が完了した後、以下のコマンドを実行します。
+
+```bash
+npm run upload
+```
+
+アップロードが成功すると、限定公開（URLを知っている人のみ視聴可能）のYouTubeリンクがコンソールに表示されます。
+
 ## 構成
 
 * `src/Root.tsx`: メインの設定ファイル。Compositionの登録とパラメータを管理します。
