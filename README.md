@@ -1,97 +1,94 @@
-# Remotion Audiogram Template
+# Remotion Music PV Template
 
-This template is for creating "audiograms". In other words, video clips from podcast episodes, or any other audio. It's a popular way of sharing audio snippets on social media.
+このテンプレートは、Remotionを使って楽曲のプロモーションビデオ（PV）やアルバムのクロスフェードプレビュー動画を生成するためのプロジェクトです。
 
-[Example video](https://twitter.com/marcusstenbeck/status/1460641903326732300)
+ジャケット画像、音声ファイル、各楽曲の再生スタート＆エンド時間を設定することで、再生中の楽曲名が自動で切り替わるアニメーション動画（波形ビジュアライザ付き）を生成できます。
 
-<p align="center">
-  <img src="https://github.com/marcusstenbeck/remotion-template-audiogram/raw/main/Promo.png">
-</p>
+## セットアップ
 
-## Getting started
+依存関係をインストールします：
 
-```
-npm i
+```bash
+npm install
 ```
 
+## 動画のプレビュー
+
+ローカルで開発サーバーを立ち上げ、動画のプレビューを確認します：
+
+```bash
+npm run dev
 ```
-npx remotion studio
+
+ブラウザでプレビュー画面（Remotion Studio）が開きます。
+
+## カスタマイズ方法
+
+動画の内容を変更するには、`src/Root.tsx` 内の `defaultProps` を編集します。
+
+```tsx
+// src/Root.tsx
+import { staticFile } from "remotion";
+
+export const RemotionRoot: React.FC = () => {
+  return (
+    <Composition
+      // ...
+      defaultProps={{
+        // 音声ファイルのパス（publicフォルダ内に配置）
+        audioFileUrl: staticFile("audio.wav"),
+
+        // ジャケット画像のパス（publicフォルダ内に配置）
+        coverImageUrl: staticFile("cover.jpeg"),
+
+        // アルバム名
+        albumName: "My Awesome Album",
+
+        // 楽曲タイトルの文字色
+        titleColor: "rgba(255, 255, 255, 0.93)",
+
+        // トラックリストの設定
+        // 各楽曲のタイトルと、再生の開始時間・終了時間（秒）を指定します
+        songs: [
+          { title: "Intro", startInSeconds: 0, endInSeconds: 5 },
+          { title: "Main Track", startInSeconds: 5, endInSeconds: 15 },
+          { title: "Outro", startInSeconds: 15, endInSeconds: 20 },
+        ],
+
+        // 波形ビジュアライザの設定
+        visualizer: {
+          type: "spectrum", // "spectrum" または "oscilloscope"
+          color: "#F4B941",
+          // ...
+        },
+      }}
+    />
+  );
+};
 ```
 
-Start changing things like this:
+### ファイルの差し替え
 
-- Adjust parameters in `src/Root.tsx` or in the Studio sidebar
-- Replacing audio, cover and subtitles in the `public` folder
+自身の音声ファイルやジャケット画像を使用する場合は、`public` フォルダ内にファイルを配置し、`staticFile("ファイル名")` のように指定してください。
 
-## How do I render my video?
+*注意: 波形の描画を最適化するため、音声ファイルは `.wav` 形式を推奨します。*
 
-Run this:
+## 動画のレンダリング（書き出し）
 
-```console
+動画ファイル（MP4など）として出力するには、以下のコマンドを実行します：
+
+```bash
 npx remotion render
 ```
 
-Or check out the [Remotion docs](/docs/render/). There are lots of ways to render.
+Renderパネルが開くので、そこから出力設定を行い、書き出しを開始できます。CLIから直接書き出すことも可能です。詳しくは [Remotionのドキュメント](https://www.remotion.dev/docs/render/) を参照してください。
 
-## Where to get a transcript?
+## 構成
 
-You can generate the captions or supply a .srt file or a .json file that follows the [`@remotion/captions`](https://remotion.dev/docs/captions/caption) format.
+* `src/Root.tsx`: メインの設定ファイル。Compositionの登録とパラメータを管理します。
+* `src/Audiogram/Main.tsx`: 動画のレイアウトやアニメーションのメインコンポーネントです。
+* `src/Audiogram/schema.ts`: Zodを用いたパラメータのスキーマ定義です。
 
-### Generate captions
+## ライセンスに関する注意
 
-- With the built-in transcription script using [`@remotion/install-whisper-cpp`](https://www.remotion.dev/docs/install-whisper-cpp/):
-
-  ```console
-  bun transcribe.ts
-  # With Node.js: `npx tsx transcribe.ts`
-  ```
-
-  This will:
-
-  - Ask for your audio file path (supports any ffmpeg format)
-  - Ask for the speech start time (to avoid false triggers from background music, intro jingles or noise)
-  - Generate captions.json in the public folder
-
-- Alternatively, use [`@remotion/openai-whisper`](https://www.remotion.dev/docs/openai-whisper/openai-whisper-api-to-captions) to get captions from OpenAI Whisper into the right shape.
-
-**Get it from a provider:**
-
-- Your podcasting host might provide them for you.
-- Descript makes transcription really easy.
-- There are tons of other, paid solutions, like [Otter.ai](https://otter.ai), [Scriptme.io](https://scriptme.io) and [ListenRobo.com](https://listenrobo.com).
-
-If you supply a .srt, make sure to export subtitles that are segmented by word rather than by sentence.
-
-## Optimizing for long audio files
-
-If your audio is long, make sure to pass a `.wav` file as audio.
-The template will use [`useWindowedAudioData()`](/docs/use-windowed-audio-data) to only fetch the data around the current time.
-
-Otherwise, the waveform of the whole audio needs to be fetched, which may be slow.
-
-## Docs
-
-Get started with Remotion by reading the [fundamentals page](https://www.remotion.dev/docs/the-fundamentals).
-
-## Help
-
-We provide help [on our Discord server](https://discord.gg/6VzzNDwUwV).
-
-## Issues
-
-Found an issue with Remotion? Upgrade Remotion to receive fixes:
-
-```
-npx remotion upgrade
-```
-
-Didn't help? [File an issue here](https://github.com/remotion-dev/remotion/issues/new).
-
-## Contributing
-
-The source of this template is in the [Remotion Monorepo](https://github.com/remotion-dev/remotion/tree/main/packages/template-audiogram).
-Don't send pull requests here, this is only a mirror.
-
-## License
-
-Note that for some entities a company license is needed. Read [the terms here](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md).
+本テンプレートはRemotionを使用しています。商用利用など、一定の条件下ではライセンスの購入が必要になる場合があります。詳しくは [Remotionのライセンス条項](https://github.com/remotion-dev/remotion/blob/main/LICENSE.md) をご確認ください。
