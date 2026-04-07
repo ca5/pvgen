@@ -17,14 +17,15 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           // audio settings
           audioOffsetInSeconds: 0,
-          audioFileUrl: staticFile("audio.wav"),
+          audioFileUrl: staticFile("dialogue.wav"),
           // podcast data
-          coverImageUrl: staticFile("cover.jpg"),
-          albumName: "ESC TRACKER VOL.01",
+          coverImageUrl: staticFile("podcast-cover.jpeg"),
+          albumName: "My Awesome Album",
           titleColor: "rgba(255, 255, 255, 0.93)",
           songs: [
-            { title: "test1", startInSeconds: 0, endInSeconds: 113 },
-            { title: "test2", startInSeconds: 113, endInSeconds: 165 },
+            { title: "Intro", startInSeconds: 0, endInSeconds: 5 },
+            { title: "Main Track", startInSeconds: 5, endInSeconds: 15 },
+            { title: "Outro", startInSeconds: 15, endInSeconds: 20 },
           ],
           // visualizer settings
           visualizer: {
