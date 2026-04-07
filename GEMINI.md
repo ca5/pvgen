@@ -1,0 +1,48 @@
+# Gemini Agent Instructions: Music PV Generator & Uploader
+
+このドキュメントは、AIエージェント（あなた）がユーザーから「楽曲」「楽曲情報（トラックリストなど）」「ジャケット画像」を受け取った際に、このRemotionテンプレートを使用して動画を生成し、YouTubeに限定公開でアップロードするまでの手順を定義したものです。
+
+## ワークフロー
+
+### 1. アセットの配置
+ユーザーから提供された音声ファイル（例：`.wav` や `.mp3`）と、ジャケット画像（例：`.png` や `.jpeg`）を、プロジェクト内の `public/` フォルダに配置します。
+
+*   既存のサンプルファイル（例：`dialogue.wav` や `podcast-cover.jpeg`）は削除するか、上書きして構いません。
+
+### 2. メタデータの設定 (`src/Root.tsx`)
+`src/Root.tsx` 内の `defaultProps` を、ユーザーから提供された情報に基づいて更新します。
+
+更新すべき主な項目：
+*   `audioFileUrl`: `staticFile("あなたの配置した音声ファイル名")`
+*   `coverImageUrl`: `staticFile("あなたの配置した画像ファイル名")`
+*   `albumName`: アルバム名
+*   `songs`: 楽曲情報の配列。各楽曲のタイトル (`title`) と、再生開始時間 (`startInSeconds`)、終了時間 (`endInSeconds`) を正確に設定してください。
+
+### 3. 環境変数の確認
+アップロードを実行する前に、プロジェクトルートに `.env` ファイルが存在し、YouTube APIの認証情報が設定されているか確認してください。設定されていない場合は、ユーザーにプロンプト（質問）を出して設定を促してください。
+
+必要な環境変数：
+*   `YOUTUBE_CLIENT_ID`
+*   `YOUTUBE_CLIENT_SECRET`
+*   `YOUTUBE_REFRESH_TOKEN`
+
+### 4. 動画のレンダリング
+設定が完了したら、以下のコマンドを実行して動画ファイル（MP4）を書き出します。
+
+```bash
+npx remotion render Audiogram out/video.mp4
+```
+
+書き出しが成功すると、`out/video.mp4` に動画が保存されます。
+
+### 5. YouTubeへのアップロード
+動画のレンダリングが完了したら、以下のコマンドを実行してYouTubeへのアップロードを行います。
+
+```bash
+npm run upload
+```
+
+このスクリプトは `upload.ts` を実行し、動画を「限定公開 (unlisted)」として指定のYouTubeアカウントにアップロードします。
+
+### 6. 結果の報告
+アップロードが完了すると、コンソールに動画のURLが出力されます。そのURLをユーザーに報告してタスク完了となります。エラーが発生した場合は、エラーログを解析し、ユーザーに状況を説明してください。
