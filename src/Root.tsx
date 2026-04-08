@@ -23,9 +23,9 @@ export const RemotionRoot: React.FC = () => {
           albumName: "My Awesome Album",
           titleColor: "rgba(255, 255, 255, 0.93)",
           songs: [
-            { title: "Intro", startInSeconds: 0, endInSeconds: 5 },
-            { title: "Main Track", startInSeconds: 5, endInSeconds: 15 },
-            { title: "Outro", startInSeconds: 15, endInSeconds: 20 },
+            { trackNumber: 1, title: "Intro", artist: "Artist A", startInSeconds: 0, endInSeconds: 5 },
+            { trackNumber: 2, title: "Main Track", artist: "Artist B", startInSeconds: 5, endInSeconds: 15 },
+            { trackNumber: 3, title: "Outro", artist: "Artist C", startInSeconds: 15, endInSeconds: 20 },
           ],
           // visualizer settings
           visualizer: {

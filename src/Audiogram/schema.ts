@@ -35,7 +35,9 @@ export const audiogramSchema = z.object({
   titleColor: zColor(),
   songs: z.array(
     z.object({
+      trackNumber: z.number().int().min(1).optional(),
       title: z.string(),
+      artist: z.string().optional(),
       startInSeconds: z.number().min(0),
       endInSeconds: z.number().min(0),
     })
