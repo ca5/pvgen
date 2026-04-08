@@ -79,19 +79,32 @@ export const Audiogram: React.FC<AudiogramCompositionSchemaType> = ({
                   lineHeight: "1.2",
                   fontWeight: 800,
                   color: titleColor,
-                  fontSize: "64px",
+                  fontSize: "56px",
                   marginBottom: "16px",
                   textShadow: "0 4px 10px rgba(0,0,0,0.5)"
                 }}
               >
+                {currentSong.trackNumber ? `${currentSong.trackNumber}. ` : ""}
                 {currentSong.title}
               </div>
               <div
                 style={{
                   lineHeight: "1",
                   fontWeight: 600,
-                  color: "rgba(255,255,255,0.7)",
+                  color: "rgba(255,255,255,0.8)",
                   fontSize: "36px",
+                  marginBottom: "16px",
+                  textShadow: "0 2px 8px rgba(0,0,0,0.5)"
+                }}
+              >
+                {currentSong.artist ? currentSong.artist : ""}
+              </div>
+              <div
+                style={{
+                  lineHeight: "1",
+                  fontWeight: 600,
+                  color: "rgba(255,255,255,0.6)",
+                  fontSize: "32px",
                   textShadow: "0 2px 8px rgba(0,0,0,0.5)"
                 }}
               >
