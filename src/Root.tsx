@@ -17,9 +17,9 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           // audio settings
           audioOffsetInSeconds: 0,
-          audioFileUrl: staticFile("dialogue.wav"),
+          audioFileUrl: staticFile("sample-audio.wav"),
           // podcast data
-          coverImageUrl: staticFile("podcast-cover.jpeg"),
+          coverImageUrl: staticFile("sample-cover.jpeg"),
           albumName: "My Awesome Album",
           titleColor: "rgba(255, 255, 255, 0.93)",
           songs: [
